@@ -12,6 +12,11 @@ test('nothing after beginning of question', async t => {
 });
 
 test('normal question', async t => {
-	let stereotype = model.questionToStereotype('why are spaniards so loud');
+	let stereotype = model.questionToStereotype('why are spaniard so loud');
+	t.is(stereotype, 'loud');
+});
+
+test('normal question ("the" version)', async t => {
+	let stereotype = model.questionToStereotype('why are the spaniard so loud');
 	t.is(stereotype, 'loud');
 });

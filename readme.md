@@ -6,7 +6,7 @@ A map of the stereotypes associated to the different nationalities.
 
 ```sh
 $ npm install
-$ stylus style.styl > static/style.css # generate the css
+$ stylus style.styl map.styl -o static/ # generate the css
 $ node hook.js # start the server!
 ```
 
