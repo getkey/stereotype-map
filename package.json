@@ -1,0 +1,26 @@
+{
+  "name": "stereotype-map",
+  "version": "0.0.0",
+  "description": "A map of the stereotypes associated to the different nationalities",
+  "dependencies": {
+    "gsearch": "1.x",
+    "country-query": "0.x",
+    "babel-plugin-transform-async-to-generator": "6.x",
+    "babel-register": "6.x",
+    "koa": "2.x",
+    "koa-route": "3.x"
+  },
+  "devDependencies": {
+    "koa-static": "3.x",
+    "ava": "0.x"
+  },
+  "scripts": {
+    "test": "./node_modules/ava/cli.js ./tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/getkey/stereotype-map"
+  },
+  "readme": "readme.md",
+  "license": "MPL-2.0"
+}
