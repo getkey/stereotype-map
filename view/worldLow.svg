@@ -2,7 +2,6 @@
 <!-- (c) ammap.com | SVG map of World - Low -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1008.9 651.45" version="1.1">
 	<defs>
-		<link href="map.css" type="text/css" rel="stylesheet" xmlns="http://www.w3.org/1999/xhtml"/>
 		<amcharts:ammap projection="mercator" leftLongitude="-169.6" topLatitude="83.68" rightLongitude="190.25" bottomLatitude="-55.55"></amcharts:ammap>
 
 		<!-- All areas are listed in the line below. You can use this list in your script. -->

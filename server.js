@@ -1,14 +1,30 @@
 const Koa = require('koa'),
 	router = require('koa-route'),
+	co = require('co'),
+	render = require('koa-ejs'),
 	app = new Koa(),
 	model = require('./model.js');
 
+let dev = app.env === 'development';
+console.log('Dev mode set: ' + dev);
 
-if (app.env === 'development') { // on prod server nginx handles this
+render(app, {
+	root: __dirname + '/view',
+	layout: false,
+	viewExt: false,
+	cache: !dev,
+	debug: dev
+});
+app.context.render = co.wrap(app.context.render);
+
+if (dev) { // on prod server nginx handles this
 	const serve = require('koa-static');
 	app.use(serve(__dirname + '/static'));
 }
 
+app.use(router.get('/', async ctx => {
+	await ctx.render('index.ejs');
+}));
 
 app.use(router.get('/api/:countryCode.json', async (ctx, countryCode) => {
 	try {
