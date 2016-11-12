@@ -7,8 +7,18 @@
 		<link rel="stylesheet" href="map.css"/>
 	</head>
 	<body>
-		<div id="app" v-on:click="displayCountryCode">
+		<div id="app" v-on:mouseover="displayStereotypes" v-on:mouseout="hideStereotypes">
 			<%- include('worldLow.svg') %>
+			<div id="stereotype-box" v-if="currentCountry !== null">
+				<p>People from {{ currentCountry }} are:</p>
+				<p class="status" v-if="!fetched">Please wait...</p>
+				<div v-else>
+					<p class="status" v-if="stereotypes.length === 0">No stereotype found for this country!</p>
+					<ul v-else>
+						<li v-for="stereotype in stereotypes">{{ stereotype }}</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 
 		<script src="https://unpkg.com/vue/dist/vue.js"></script>
