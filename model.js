@@ -73,7 +73,7 @@ function askQuestions(countryCode) {
 	let promises = [];
 	for (let partialQuestion of getPartialQuestions(countryCode)) {
 		promises.push(new Promise((resolve, reject) => {
-			gsearch.suggest(partialQuestion, (err, questions, res) => {
+			gsearch.suggest(partialQuestion, (err, questions) => {
 				if (err) reject(err);
 
 				let stereotypes = [];
@@ -88,7 +88,7 @@ function askQuestions(countryCode) {
 	}
 
 	generateFinalStereotypes(promises).then(stereotypes => {
-		saveStereotypes(countryCode, stereotypes)
+		saveStereotypes(countryCode, stereotypes);
 	});
 
 	return promises;
@@ -104,6 +104,8 @@ function generateFinalStereotypes(answerPromises) {
 				}
 			}
 			resolve(finalStereotypes);
+		}).catch(err => {
+			reject(err);
 		});
 	});
 }
@@ -115,4 +117,4 @@ module.exports.getStereotypes = function(countryCode) {
 	let answerPromises = askQuestions(countryCode);
 
 	return generateFinalStereotypes(answerPromises);
-}
+};

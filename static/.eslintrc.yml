@@ -1,0 +1,5 @@
+env:
+  es6: false
+  node: false
+globals:
+  Vue: false

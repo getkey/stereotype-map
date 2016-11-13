@@ -1,6 +1,6 @@
 'use strict';
 
-var mv = new Vue({
+new Vue({
 	el: '#app',
 	data: {
 		currentCountry: null,
@@ -20,15 +20,19 @@ var mv = new Vue({
 			this.fetched = true;
 		},
 		overLand: function(ev) {
-			console.log(this.cache);
 			if (ev.target.tagName === 'path') {
 				this.currentCountry = ev.target.getAttribute('title');
-				if (this.cache[ev.target.id] !== undefined) {
+
+				let countryCode = ev.target.id;
+
+				if (this.cache[countryCode] === null) return; // pending request
+
+				if (this.cache[countryCode] !== undefined) {
 					this.getFromCache(ev.target.id);
 				} else {
-					var req = new XMLHttpRequest(),
-						countryCode = ev.target.id;
-					req.open('GET', '/api/' + ev.target.id + '.json', true);
+					this.cache[countryCode] = null;
+					var req = new XMLHttpRequest();
+					req.open('GET', '/api/' + countryCode + '.json', true);
 					req.addEventListener('load', function(ev) {
 						this.cache[countryCode] = JSON.parse(ev.target.responseText);
 						this.getFromCache(countryCode);
@@ -42,12 +46,19 @@ var mv = new Vue({
 				this.hideStBox();
 			}
 		},
-		leaveStBox: function(ev) {
+		leaveStBox: function() {
 			this.mouseOverBox = false;
 			this.hideStBox();
 		},
-		enterStBox: function(ev) {
+		enterStBox: function() {
 			this.mouseOverBox = true;
 		}
+	}
+});
+
+new Vue({
+	el: '#info',
+	data: {
+		showExp: false
 	}
 });

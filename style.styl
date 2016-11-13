@@ -1,6 +1,9 @@
+@require 'colors.styl'
+
 body
 	margin: 0
 	overflow-y: hidden
+	background-color: $sea
 
 html, body, #app, svg
 	height: 100%
@@ -8,14 +11,37 @@ html, body, #app, svg
 svg
 	width: 100%
 
+$abs-offset = 1.75rem
+$shadow-params = 0 0 2px $sea
 #stereotype-box
-	$offset = 1.75rem
 	position: absolute
-	bottom: $offset
-	left: $offset
-	background-color: #e4e4e4
+	bottom: $abs-offset
+	left: $abs-offset
+	background-color: $land
 	padding: 2rem
+	box-shadow: $shadow-params
 
-.status
-	color: #303030
-	font-size: 0.9rem
+	.status
+		color: #303030
+		font-size: 0.9rem
+
+#info
+	position: absolute
+	bottom: $abs-offset
+	right: $abs-offset
+
+	#info-button
+		box-shadow: $shadow-params
+		background-color: $land
+		font-size: 2rem
+		border-radius: 50%
+		width: 4rem
+		height: 4rem
+		text-align: center
+		display: table-cell
+		vertical-align: middle
+
+	#explanation
+		box-shadow: $shadow-params
+		background-color: $land
+		padding: 1rem
