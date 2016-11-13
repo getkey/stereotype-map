@@ -5,7 +5,7 @@ A map of the stereotypes associated to the different nationalities.
 ## Install
 
 ```sh
-$ npm install
+$ npm install --no-optional
 $ stylus style.styl map.styl -o static/ # generate the css
 $ node hook.js # start the server!
 ```
@@ -25,3 +25,24 @@ GET stereotype-map/api/DE.json
 ```
 
 You will get a JSON-formatted array of stereotypes associated with the country you chose.
+
+## Database
+
+If you install the (optional) npm package `pg-promise`, data will be saved to a PostgreSQL database.
+
+You must first create the tables (in the postgreSQL shell):
+```
+=> \i db/create.pgsql
+```
+
+You will need the file `db.json`, which contains your database credentials:
+
+```JSON
+{
+	"host": "localhost",
+	"port": 5432,
+	"database": "stereotypemap",
+	"user": "getkey",
+	"password": "yourpassword"
+}
+```

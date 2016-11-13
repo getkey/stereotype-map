@@ -1,6 +1,19 @@
 const gsearch = require('gsearch'),
 	countryQuery = require('country-query');
 
+let db = null;
+try {
+	const fs = require('fs'),
+		pgp = require('pg-promise')();
+
+	console.log('PostreSQL: enabled');
+	db = pgp(JSON.parse(fs.readFileSync('./db.json')));
+} catch(err) {
+	if (err.message === 'Cannot find module \'pg-promise\'') console.log('PostreSQL: disabled');
+	else console.log(err);
+}
+
+
 let cache = {};
 
 function validCountryCode(countryCode) {
@@ -28,6 +41,27 @@ function upToDate(countryCode) {
 	return Date.now() < prescription;
 }
 
+function saveStereotypes(countryCode, stereotypes) {
+	let date = Date.now();
+
+	cache[countryCode] = {
+		date,
+		data: stereotypes
+	};
+
+	if (db !== null) {
+		for (let stereotype of stereotypes) {
+			db.any('SELECT stereotypeValue FROM stereotype WHERE stereotypevalue=\'' + stereotype + '\'').then((data) => {
+				if (data.length === 0) {
+					return db.none('INSERT INTO stereotype(stereotypevalue) VALUES(\'' + stereotype + '\')');
+				}
+			}).catch((err) => {
+				console.error(err);
+			});
+		}
+	}
+}
+
 function askQuestions(countryCode) {
 	if (cache[countryCode] !== undefined && upToDate(countryCode)) return [Promise.resolve(cache[countryCode].data)];
 
@@ -43,15 +77,14 @@ function askQuestions(countryCode) {
 					if (stereotype !== null) stereotypes.push(stereotype);
 				}
 
-				cache[countryCode] = {
-					date: Date.now(),
-					data: stereotypes
-				};
-
 				resolve(stereotypes);
 			});
 		}));
 	}
+
+	generateFinalStereotypes(promises).then(stereotypes => {
+		saveStereotypes(countryCode, stereotypes)
+	});
 
 	return promises;
 }

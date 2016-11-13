@@ -16,6 +16,9 @@
     "koa-static": "3.x",
     "ava": "0.x"
   },
+  "optionalDependencies": {
+    "pg-promise": "5.x"
+  },
   "scripts": {
     "test": "./node_modules/ava/cli.js ./tests"
   },
