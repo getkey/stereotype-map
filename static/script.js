@@ -1,12 +1,13 @@
 'use strict';
 
-let mv = new Vue({
+var mv = new Vue({
 	el: '#app',
 	data: {
 		currentCountry: null,
 		stereotypes: [],
 		fetched: false,
-		mouseOverBox: false
+		mouseOverBox: false,
+		cache: {}
 	},
 	methods: {
 		hideStBox: function() {
@@ -14,16 +15,26 @@ let mv = new Vue({
 			this.stereotypes = [];
 			this.fetched = false;
 		},
+		getFromCache: function(countryCode) {
+			this.stereotypes = this.cache[countryCode];
+			this.fetched = true;
+		},
 		overLand: function(ev) {
+			console.log(this.cache);
 			if (ev.target.tagName === 'path') {
 				this.currentCountry = ev.target.getAttribute('title');
-				var req = new XMLHttpRequest();
-				req.open('GET', '/api/' + ev.target.id + '.json', true);
-				req.addEventListener('load', function(ev) {
-					this.stereotypes = JSON.parse(ev.target.responseText);
-					this.fetched = true;
-				}.bind(this));
-				req.send(null);
+				if (this.cache[ev.target.id] !== undefined) {
+					this.getFromCache(ev.target.id);
+				} else {
+					var req = new XMLHttpRequest(),
+						countryCode = ev.target.id;
+					req.open('GET', '/api/' + ev.target.id + '.json', true);
+					req.addEventListener('load', function(ev) {
+						this.cache[countryCode] = JSON.parse(ev.target.responseText);
+						this.getFromCache(countryCode);
+					}.bind(this));
+					req.send(null);
+				}
 			}
 		},
 		outLand: function(ev) {

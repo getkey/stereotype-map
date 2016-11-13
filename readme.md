@@ -1,6 +1,8 @@
-# stereotype-map
+# [stereotype-map](http://stereotypemap.info/)
 
 A map of the stereotypes associated to the different nationalities.
+
+The data is taken from Google's search suggestion, for queries such as "why are the french so".
 
 ## Install
 
@@ -46,3 +48,7 @@ You will need the file `db.json`, which contains your database credentials:
 	"password": "yourpassword"
 }
 ```
+
+## Credits
+
+The map svg file is from [amCharts](https://www.amcharts.com/svg-maps/?map=world), distributed under the CC BY-NC 4.0.
