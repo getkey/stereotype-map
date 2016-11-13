@@ -26,8 +26,11 @@ function getPartialQuestions(countryCode) {
 	return ['why are the ' + demonym + ' so', 'why are ' + demonym + ' so'];
 }
 
-function questionToStereotype(question) {
-	let match = question.match(/why are(?: the)? .+ so( |$)/i, '');
+function questionToStereotype(question, countryCode) {
+	let demonym = countryQuery.findByCca2(countryCode).demonym,
+		regStr = 'why are(?: the)? ' + demonym + ' so( (?!many)|$)';
+
+	let match = question.match(new RegExp(regStr, 'i'), '');
 	if (match !== null && match[1] === ' ') return match.input.replace(match[0], '');
 	else return null;
 }
@@ -73,7 +76,7 @@ function askQuestions(countryCode) {
 
 				let stereotypes = [];
 				for (let question of questions) {
-					let stereotype = questionToStereotype(question);
+					let stereotype = questionToStereotype(question, countryCode);
 					if (stereotype !== null) stereotypes.push(stereotype);
 				}
 
