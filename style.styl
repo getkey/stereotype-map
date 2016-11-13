@@ -1,5 +1,11 @@
 @require 'colors.styl'
 
+user-select($arg)
+	-webkit-user-select: $arg
+	-moz-user-select: $arg
+	-ms-user-select: $arg
+	user-select: $arg
+
 body
 	margin: 0
 	overflow-y: hidden
@@ -8,13 +14,22 @@ body
 html, body, #app, svg
 	height: 100%
 
+#fork-me
+	img
+		position: fixed
+		top: 0
+		right: 0
+		border: 0
+
 svg
-	width: 100%
+	user-select(none)
+	display: block
+	margin: auto
 
 $abs-offset = 1.75rem
 $shadow-params = 0 0 2px $sea
 #stereotype-box
-	position: absolute
+	position: fixed
 	bottom: $abs-offset
 	left: $abs-offset
 	background-color: $land
@@ -26,9 +41,10 @@ $shadow-params = 0 0 2px $sea
 		font-size: 0.9rem
 
 #info
-	position: absolute
+	position: fixed
 	bottom: $abs-offset
 	right: $abs-offset
+	margin-left: $abs-offset
 
 	#info-button
 		box-shadow: $shadow-params
