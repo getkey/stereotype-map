@@ -3,13 +3,14 @@
 	<head>
 		<meta charset="utf-8"/>
 		<title>Stereotype Map</title>
+		<link rel="icon" href="favicon.svg"/>
 		<link rel="stylesheet" href="style.css"/>
 		<link rel="stylesheet" href="map.css"/>
 	</head>
 	<body>
-		<div id="app" v-on:mouseover="displayStereotypes" v-on:mouseout="hideStereotypes">
+		<div id="app" v-on:mouseover="overLand" v-on:mouseout="outLand">
 			<%- include('worldLow.svg') %>
-			<div id="stereotype-box" v-if="currentCountry !== null">
+			<div id="stereotype-box" v-if="currentCountry !== null" v-on:mouseleave.self="leaveStBox" v-on:mouseenter.self="enterStBox">
 				<p>People from {{ currentCountry }} are:</p>
 				<p class="status" v-if="!fetched">Please wait...</p>
 				<div v-else>

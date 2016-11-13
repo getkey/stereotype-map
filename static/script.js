@@ -5,10 +5,16 @@ let mv = new Vue({
 	data: {
 		currentCountry: null,
 		stereotypes: [],
-		fetched: false
+		fetched: false,
+		mouseOverBox: false
 	},
 	methods: {
-		displayStereotypes: function(ev) {
+		hideStBox: function() {
+			this.currentCountry = null;
+			this.stereotypes = [];
+			this.fetched = false;
+		},
+		overLand: function(ev) {
 			if (ev.target.tagName === 'path') {
 				this.currentCountry = ev.target.getAttribute('title');
 				var req = new XMLHttpRequest();
@@ -20,12 +26,17 @@ let mv = new Vue({
 				req.send(null);
 			}
 		},
-		hideStereotypes: function(ev) {
-			if (ev.target.tagName === 'path') {
-				this.currentCountry = null;
-				this.stereotypes = [];
-				this.fetched = false;
+		outLand: function(ev) {
+			if (ev.target.tagName === 'path' && !this.mouseOverBox) {
+				this.hideStBox();
 			}
+		},
+		leaveStBox: function(ev) {
+			this.mouseOverBox = false;
+			this.hideStBox();
+		},
+		enterStBox: function(ev) {
+			this.mouseOverBox = true;
 		}
 	}
 });
