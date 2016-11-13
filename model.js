@@ -45,7 +45,7 @@ function upToDate(countryCode) {
 }
 
 function saveStereotypes(countryCode, stereotypes) {
-	let date = Date.now();
+	let date = Math.floor(Date.now()/1000);
 
 	cache[countryCode] = {
 		date,
@@ -58,6 +58,8 @@ function saveStereotypes(countryCode, stereotypes) {
 				if (data.length === 0) {
 					return db.none('INSERT INTO stereotype(stereotypevalue) VALUES(\'' + stereotype + '\')');
 				}
+			}).then(() => {
+				return db.none('INSERT INTO association (stereotypeId, countryCode, date) SELECT stereotypeId, \'' + countryCode + '\', to_timestamp(' + date + ') FROM stereotype WHERE stereotypevalue=\'' + stereotype + '\'');
 			}).catch((err) => {
 				console.error(err);
 			});
