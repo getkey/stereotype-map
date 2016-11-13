@@ -1,6 +1,8 @@
 const gsearch = require('gsearch'),
 	countryQuery = require('country-query');
 
+let cache = {};
+
 function validCountryCode(countryCode) {
 	return countryQuery.findByCca2(countryCode) !== null;
 }
@@ -17,30 +19,46 @@ function questionToStereotype(question) {
 	else return null;
 }
 
-module.exports.questionToStereotype = questionToStereotype;
-module.exports.getStereotypes = function(countryCode) {
-		if (!validCountryCode(countryCode)) return Promise.reject(new Error('Invalid country code'));
+function upToDate(countryCode) {
+	if (cache[countryCode] === undefined) return false;
 
-		let promises = [];
-		for (let partialQuestion of getPartialQuestions(countryCode)) {
-			promises.push(new Promise((resolve, reject) => {
-				gsearch.suggest(partialQuestion, (err, questions, res) => {
-					if (err) reject(err);
+	let prescription = new Date(cache[countryCode].date);
+	prescription.setDate(prescription.getDate() + 1); // stereotypes are valid one day
 
-					let stereotypes = [];
-					for (let question of questions) {
-						let stereotype = questionToStereotype(question);
-						if (stereotype !== null) stereotypes.push(stereotype);
-					}
+	return Date.now() < prescription;
+}
 
-					resolve(stereotypes);
-				});
-			}));
-		}
+function askQuestions(countryCode) {
+	if (cache[countryCode] !== undefined && upToDate(countryCode)) return [Promise.resolve(cache[countryCode].data)];
 
+	let promises = [];
+	for (let partialQuestion of getPartialQuestions(countryCode)) {
+		promises.push(new Promise((resolve, reject) => {
+			gsearch.suggest(partialQuestion, (err, questions, res) => {
+				if (err) reject(err);
 
+				let stereotypes = [];
+				for (let question of questions) {
+					let stereotype = questionToStereotype(question);
+					if (stereotype !== null) stereotypes.push(stereotype);
+				}
+
+				cache[countryCode] = {
+					date: Date.now(),
+					data: stereotypes
+				};
+
+				resolve(stereotypes);
+			});
+		}));
+	}
+
+	return promises;
+}
+
+function generateFinalStereotypes(answerPromises) {
 	return new Promise((resolve, reject) => {
-		Promise.all(promises).then(allStereotypes => {
+		Promise.all(answerPromises).then(allStereotypes => {
 			let finalStereotypes = allStereotypes[0];
 			for (let stereotypes of allStereotypes.slice(1)) {
 				for (let stereotype of stereotypes) {
@@ -50,4 +68,13 @@ module.exports.getStereotypes = function(countryCode) {
 			resolve(finalStereotypes);
 		});
 	});
+}
+
+module.exports.questionToStereotype = questionToStereotype;
+module.exports.getStereotypes = function(countryCode) {
+	if (!validCountryCode(countryCode)) return Promise.reject(new Error('Invalid country code'));
+
+	let answerPromises = askQuestions(countryCode);
+
+	return generateFinalStereotypes(answerPromises);
 }
