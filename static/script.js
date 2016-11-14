@@ -31,11 +31,16 @@ new Vue({
 					this.getFromCache(ev.target.id);
 				} else {
 					this.cache[countryCode] = null;
-					var req = new XMLHttpRequest();
+					var req = new XMLHttpRequest(),
+						associatedCountry = this.currentCountry;
 					req.open('GET', '/api/' + countryCode + '.json', true);
 					req.addEventListener('load', function(ev) {
 						this.cache[countryCode] = JSON.parse(ev.target.responseText);
-						this.getFromCache(countryCode);
+						if (associatedCountry === this.currentCountry) {
+							// if when the callback is run the displayed country is the same as the fetched country
+							// then display stereotypes
+							this.getFromCache(countryCode);
+						}
 					}.bind(this));
 					req.send(null);
 				}

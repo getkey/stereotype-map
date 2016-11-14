@@ -8,8 +8,10 @@ user-select($arg)
 
 body
 	margin: 0
-	overflow-y: hidden
 	background-color: $sea
+
+html, body
+	overflow: auto // http://stackoverflow.com/a/14569741
 
 html, body, #app, svg
 	height: 100%

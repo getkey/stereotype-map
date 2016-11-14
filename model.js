@@ -45,12 +45,12 @@ function upToDate(countryCode) {
 }
 
 function saveStereotypes(countryCode, stereotypes) {
-	let date = Math.floor(Date.now()/1000);
-
 	cache[countryCode] = {
-		date,
+		date: Date.now(),
 		data: stereotypes
 	};
+
+	let pgDate = Math.floor(cache[countryCode].date/1000);
 
 	if (db !== null) {
 		for (let stereotype of stereotypes) {
@@ -59,7 +59,7 @@ function saveStereotypes(countryCode, stereotypes) {
 					return db.none('INSERT INTO stereotype(stereotypevalue) VALUES(\'' + stereotype + '\')');
 				}
 			}).then(() => {
-				return db.none('INSERT INTO association (stereotypeId, countryCode, date) SELECT stereotypeId, \'' + countryCode + '\', to_timestamp(' + date + ') FROM stereotype WHERE stereotypevalue=\'' + stereotype + '\'');
+				return db.none('INSERT INTO association (stereotypeId, countryCode, date) SELECT stereotypeId, \'' + countryCode + '\', to_timestamp(' + pgDate + ') FROM stereotype WHERE stereotypevalue=\'' + stereotype + '\'');
 			}).catch((err) => {
 				console.error(err);
 			});
@@ -68,6 +68,7 @@ function saveStereotypes(countryCode, stereotypes) {
 }
 
 function askQuestions(countryCode) {
+	console.log(cache[countryCode], upToDate(countryCode));
 	if (cache[countryCode] !== undefined && upToDate(countryCode)) return [Promise.resolve(cache[countryCode].data)];
 
 	let promises = [];
