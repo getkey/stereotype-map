@@ -31,7 +31,11 @@
 				<p>It reflects what people as a whole think of foreigners.</p>
 			</div>
 		</div>
-		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<% if (dev) { %>
+			<script src="vue.js"></script>
+		<% } else { %>
+			<script src="vue.min.js"></script>
+		<% } %>
 		<script src="script.js"></script>
 	</body>
 </html>

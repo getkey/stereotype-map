@@ -20,10 +20,13 @@ app.context.render = co.wrap(app.context.render);
 if (dev) { // on prod server nginx handles this
 	const serve = require('koa-static');
 	app.use(serve(__dirname + '/static'));
+	app.use(serve(__dirname + '/node_modules/vue/dist'));
 }
 
 app.use(router.get('/', async ctx => {
-	await ctx.render('index.ejs');
+	await ctx.render('index.ejs', {
+		dev
+	});
 }));
 
 app.use(router.get('/api/:countryCode.json', async (ctx, countryCode) => {
