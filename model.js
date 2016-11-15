@@ -10,7 +10,7 @@ try {
 	db = pgp(JSON.parse(fs.readFileSync('./db.json')));
 } catch(err) {
 	if (err.message === 'Cannot find module \'pg-promise\'') console.log('PostreSQL: disabled');
-	else console.log(err);
+	else console.error(err);
 }
 
 
@@ -68,7 +68,6 @@ function saveStereotypes(countryCode, stereotypes) {
 }
 
 function askQuestions(countryCode) {
-	console.log(cache[countryCode], upToDate(countryCode));
 	if (cache[countryCode] !== undefined && upToDate(countryCode)) return [Promise.resolve(cache[countryCode].data)];
 
 	let promises = [];

@@ -11,7 +11,8 @@
     "koa": "2.x",
     "koa-route": "3.x",
     "co": "4.x",
-    "koa-ejs": "3.x"
+    "koa-ejs": "3.x",
+    "github-fork-ribbon-css": "0.x"
   },
   "devDependencies": {
     "koa-static": "3.x",

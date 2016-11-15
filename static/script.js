@@ -7,13 +7,15 @@ new Vue({
 		stereotypes: [],
 		fetched: false,
 		mouseOverBox: false,
-		cache: {}
+		cache: {},
+		touchStartRegistered: false
 	},
 	methods: {
 		hideStBox: function() {
 			this.currentCountry = null;
 			this.stereotypes = [];
 			this.fetched = false;
+			this.touchStartRegistered = false;
 		},
 		getFromCache: function(countryCode) {
 			this.stereotypes = this.cache[countryCode];
@@ -57,6 +59,13 @@ new Vue({
 		},
 		enterStBox: function() {
 			this.mouseOverBox = true;
+		},
+		touchStartStBox: function(ev) {
+			this.touchStartRegistered = true;
+		},
+		touchEndStBox: function(ev) {
+			// if the user selects text, there will not be a touchstart event, only touchend
+			if (this.touchStartRegistered) this.hideStBox();
 		}
 	}
 });
