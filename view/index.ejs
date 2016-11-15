@@ -15,7 +15,7 @@
 
 			<%- include('worldLow.svg') %>
 
-			<div id="stereotype-box" v-if="currentCountry !== null" v-on:mouseleave="hideStBox" v-on:touchStart="touchStartStBox" v-on:touchend="touchEndStBox">
+			<div id="stereotype-box" v-if="currentCountry !== null" v-on:mouseleave="leaveStBox" v-on:mouseenter="enterStBox" v-on:touchStart="touchStartStBox" v-on:touchend="touchEndStBox">
 				<p>People from {{ currentCountry }} are:</p>
 				<p v-if="!fetched || stereotypes.length === 0" class="status"> {{ !fetched ? 'Please wait...' : 'No stereotype found for this country!' }} </p>
 				<ul v-else>

@@ -7,7 +7,8 @@ new Vue({
 		stereotypes: [],
 		fetched: false,
 		cache: {},
-		touchStartRegistered: false
+		touchStartRegistered: false,
+		mouseOverBox: false // used to prevent flickering
 	},
 	methods: {
 		hideStBox: function() {
@@ -47,8 +48,15 @@ new Vue({
 				}
 			}
 		},
+		leaveStBox: function() {
+			this.mouseOverBox = false;
+			this.hideStBox();
+		},
+		enterStBox: function() {
+			this.mouseOverBox = true;
+		},
 		outLand: function(ev) {
-			if ((ev.target.tagName === 'path' && ev.toElement === undefined) // desktop
+			if ((ev.target.tagName === 'path' && ev.toElement === undefined && !this.mouseOverBox) // desktop
 			|| (ev.toElement !== undefined && ev.toElement.id !== "stereotype-box")) { // mobile
 				this.hideStBox();
 			}
