@@ -15,7 +15,7 @@
 
 			<%- include('worldLow.svg') %>
 
-			<div id="stereotype-box" v-if="currentCountry !== null" v-on:mouseleave="leaveStBox" v-on:mouseenter="enterStBox" v-on:touchStart="touchStartStBox" v-on:touchend="touchEndStBox">
+			<div id="stereotype-box" v-if="currentCountry !== null" v-on:mouseleave="hideStBox" v-on:touchStart="touchStartStBox" v-on:touchend="touchEndStBox">
 				<p>People from {{ currentCountry }} are:</p>
 				<p v-if="!fetched || stereotypes.length === 0" class="status"> {{ !fetched ? 'Please wait...' : 'No stereotype found for this country!' }} </p>
 				<ul v-else>
@@ -25,7 +25,7 @@
 		</div>
 		<div id="info" v-on:mouseleave="showExp = false">
 			<div id="info-button" v-if="!showExp" v-on:mouseenter="showExp = true" title="Information">i</div>
-			<div id="explanation" v-else>
+			<div id="explanation" v-else v-on:touchend="closeIfNotLink">
 				<p>This website searches the Internet for stereotypes.<br/>
 				It reflects what people as a whole think of foreigners.</p>
 				<p>Want to <a href="https://github.com/getkey/stereotype-map"> learn more on how it works</a>?<p>

@@ -6,7 +6,6 @@ new Vue({
 		currentCountry: null,
 		stereotypes: [],
 		fetched: false,
-		mouseOverBox: false,
 		cache: {},
 		touchStartRegistered: false
 	},
@@ -49,19 +48,14 @@ new Vue({
 			}
 		},
 		outLand: function(ev) {
-			if (ev.target.tagName === 'path' && !this.mouseOverBox) {
+			if ((ev.target.tagName === 'path' && ev.toElement === undefined) // desktop
+			|| (ev.toElement !== undefined && ev.toElement.id !== "stereotype-box")) { // mobile
 				this.hideStBox();
 			}
 		},
-		leaveStBox: function() {
-			this.mouseOverBox = false;
-			this.hideStBox();
-		},
-		enterStBox: function() {
-			this.mouseOverBox = true;
-		},
 		touchStartStBox: function(ev) {
 			this.touchStartRegistered = true;
+			// if set, when we'll get a touchend, we will be sure the touchstart originated from the StBox
 		},
 		touchEndStBox: function(ev) {
 			// if the user selects text, there will not be a touchstart event, only touchend
@@ -74,5 +68,10 @@ new Vue({
 	el: '#info',
 	data: {
 		showExp: false
+	},
+	methods: {
+		closeIfNotLink: function(ev) {
+			if (ev.target.tagName !== "A") this.showExp = false;
+		}
 	}
 });
