@@ -1,2 +1,2 @@
-DROP TABLE association;
+DROP TABLE snapshot;
 DROP TABLE stereotype;

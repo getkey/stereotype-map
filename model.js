@@ -56,18 +56,24 @@ function saveStereotypes(countryCode, stereotypes) {
 		for (let stereotype of stereotypes) {
 			db.none(
 				`INSERT INTO stereotype(stereotypevalue)
-				SELECT '${ stereotype }'
+				SELECT $<stereotype>
 				WHERE NOT EXISTS (
 					SELECT stereotypeId
 					FROM stereotype
-					WHERE stereotypevalue='${ stereotype }'
-				)`
+					WHERE stereotypevalue=$<stereotype>
+				)`,
+				{ stereotype }
 			).then(() => {
 				return db.none(
-					`INSERT INTO association (stereotypeId, countryCode, date)
-					SELECT stereotypeId, '${ countryCode }', to_timestamp(${ pgDate })
+					`INSERT INTO snapshot (stereotypeId, countryCode, date)
+					SELECT stereotypeId, $<countryCode>, to_timestamp($<pgDate>)
 					FROM stereotype
-					WHERE stereotypevalue='${ stereotype }'`
+					WHERE stereotypevalue=$<stereotype>`,
+					{
+						countryCode,
+						pgDate,
+						stereotype
+					}
 				);
 			}).catch((err) => {
 				console.error(err);
