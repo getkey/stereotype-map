@@ -54,12 +54,21 @@ function saveStereotypes(countryCode, stereotypes) {
 
 	if (db !== null) {
 		for (let stereotype of stereotypes) {
-			db.any('SELECT stereotypeValue FROM stereotype WHERE stereotypevalue=\'' + stereotype + '\'').then((data) => {
-				if (data.length === 0) {
-					return db.none('INSERT INTO stereotype(stereotypevalue) VALUES(\'' + stereotype + '\')');
-				}
-			}).then(() => {
-				return db.none('INSERT INTO association (stereotypeId, countryCode, date) SELECT stereotypeId, \'' + countryCode + '\', to_timestamp(' + pgDate + ') FROM stereotype WHERE stereotypevalue=\'' + stereotype + '\'');
+			db.none(
+				`INSERT INTO stereotype(stereotypevalue)
+				SELECT '${ stereotype }'
+				WHERE NOT EXISTS (
+					SELECT stereotypeId
+					FROM stereotype
+					WHERE stereotypevalue='${ stereotype }'
+				)`
+			).then(() => {
+				return db.none(
+					`INSERT INTO association (stereotypeId, countryCode, date)
+					SELECT stereotypeId, '${ countryCode }', to_timestamp(${ pgDate })
+					FROM stereotype
+					WHERE stereotypevalue='${ stereotype }'`
+				);
 			}).catch((err) => {
 				console.error(err);
 			});
