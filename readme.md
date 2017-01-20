@@ -1,14 +1,17 @@
 # [stereotype-map](http://stereotypemap.info/)
 
-A map of the stereotypes associated to the different nationalities.
+A map of national stereotypes.
 
-The data is taken from Google's search suggestion, for queries such as "why are the french so".
+The data is taken from Google's search suggestions, for queries such as "why are the french so".
+
+![search suggestion example](https://raw.githubusercontent.com/getkey/stereotype-map/master/google_search_suggestions.png)
+
+The results are certainly not politically correct, and that's what makes it interesting and funny!
 
 ## Install
 
 ```sh
 $ npm install --no-optional
-$ stylus style.styl map.styl -o static/ # generate the css
 $ node hook.js 8080 # start the server!
 ```
 
