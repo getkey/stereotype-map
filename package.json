@@ -3,17 +3,18 @@
   "version": "0.0.0",
   "description": "Map of national stereotypes",
   "dependencies": {
-    "gsearch": "1.x",
-    "country-query": "0.x",
-    "vue": "2.x",
     "babel-plugin-transform-async-to-generator": "6.x",
     "babel-register": "6.x",
-    "koa": "2.x",
-    "koa-route": "3.x",
     "co": "4.x",
-    "koa-ejs": "3.x",
+    "country-query": "0.x",
     "github-fork-ribbon-css": "0.x",
-    "stylus": "0.x"
+    "gsearch": "1.x",
+    "koa": "2.x",
+    "koa-ejs": "3.x",
+    "koa-route": "3.x",
+    "stylus": "0.x",
+    "vue": "2.x",
+    "vuex": "2.x"
   },
   "devDependencies": {
     "koa-static": "3.x",

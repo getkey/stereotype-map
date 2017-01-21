@@ -15,10 +15,12 @@
 
 			<%- include('worldLow.svg') %>
 
-			<div id="stereotype-box" v-if="currentCountry !== null" v-on:mouseleave="leaveStBox" v-on:mouseenter="enterStBox" v-on:touchStart="touchStartStBox" v-on:touchend="touchEndStBox">
-				<p>People from {{ currentCountry }} are:</p>
-				<p v-if="!fetched || stereotypes.length === 0" class="status"> {{ !fetched ? 'Please wait...' : 'No stereotype found for this country!' }} </p>
-				<ul v-else>
+			<div id="stereotype-box" v-if="showCountryBox" v-on:mouseleave="leaveStBox" v-on:mouseenter="enterStBox" v-on:touchStart="touchStartStBox" v-on:touchend="touchEndStBox">
+				<p>People from {{ countryName }} are:</p>
+
+				<p v-if="!stereotypesKnown" class="status">Please wait</p>
+				<p v-else-if="stereotypes.length === 0" class="status">No stereotype found for this country!</p>
+				<ul v-else-if="stereotypesKnown">
 					<li v-for="stereotype in stereotypes">{{ stereotype }}</li>
 				</ul>
 			</div>
@@ -33,8 +35,10 @@
 		</div>
 		<% if (dev) { %>
 			<script src="vue.js"></script>
+			<script src="vuex.js"></script>
 		<% } else { %>
 			<script src="vue.min.js"></script>
+			<script src="vuex.min.js"></script>
 		<% } %>
 		<script src="script.js"></script>
 	</body>

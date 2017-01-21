@@ -1,52 +1,96 @@
 'use strict';
 
+const store = new Vuex.Store({
+	strict: true,
+	state: {
+		country: {
+			cc: null,
+			name: null
+		},
+		countryInCache: false,
+		cache: {}
+	},
+	mutations: {
+		showCountry: (state, { cc, countryName }) => {
+			state.country.cc = cc;
+			state.country.name = countryName;
+
+			let stereotypes = state.cache[cc];
+			state.countryInCache = stereotypes !== undefined && stereotypes !== null;
+		},
+		hideCountry: state => {
+			state.country.cc = null;
+			state.country.name = null;
+
+			state.countryInCache = true;
+		},
+		cacheCountry: (state, { cc, stereotypes }) => {
+			state.cache[cc] = stereotypes;
+
+			if (state.country.cc === cc) {
+				state.countryInCache = true;
+			}
+		}
+	},
+	actions: {
+		fetchCountry: ({ commit, state }, cc) => {
+			if (state.cache[cc] === null) return;
+			if (state.cache[cc] === undefined) { // do not fecth again if the data is there already
+				state.cache[cc] = null; // denotes a pending request
+				let req = new XMLHttpRequest();
+				req.open('GET', '/api/' + cc + '.json', true);
+				req.addEventListener('load', ev => {
+					commit('cacheCountry', {
+						cc,
+						stereotypes: JSON.parse(ev.target.responseText)
+					});
+				});
+				req.send(null);
+			}
+		}
+	}
+});
+
 new Vue({
 	el: '#app',
+	store,
 	data: {
-		currentCountry: null,
-		stereotypes: [],
-		fetched: false,
-		cache: {},
 		touchStartRegistered: false,
 		mouseOverBox: false // used to prevent flickering
 	},
+	computed: {
+		showCountryBox: function() {
+			return this.$store.state.country.cc !== null && this.$store.state.country.name !== null;
+		},
+		stereotypesKnown: function() {
+			return this.$store.state.countryInCache;
+		},
+		stereotypes: function() {
+			return this.$store.state.cache[this.$store.state.country.cc];
+		},
+		countryName: function() {
+			return this.$store.state.country.name;
+		}
+	},
 	methods: {
-		hideStBox: function() {
-			this.currentCountry = null;
-			this.stereotypes = [];
-			this.fetched = false;
-			this.touchStartRegistered = false;
-		},
-		getFromCache: function(countryCode) {
-			this.stereotypes = this.cache[countryCode];
-			this.fetched = true;
-		},
 		overLand: function(ev) {
 			if (ev.target.tagName === 'path') {
-				this.currentCountry = ev.target.getAttribute('title');
-
-				let countryCode = ev.target.id;
-
-				if (this.cache[countryCode] === null) return; // pending request
-
-				if (this.cache[countryCode] !== undefined) {
-					this.getFromCache(ev.target.id);
-				} else {
-					this.cache[countryCode] = null;
-					var req = new XMLHttpRequest(),
-						associatedCountry = this.currentCountry;
-					req.open('GET', '/api/' + countryCode + '.json', true);
-					req.addEventListener('load', function(ev) {
-						this.cache[countryCode] = JSON.parse(ev.target.responseText);
-						if (associatedCountry === this.currentCountry) {
-							// if when the callback is run the displayed country is the same as the fetched country
-							// then display stereotypes
-							this.getFromCache(countryCode);
-						}
-					}.bind(this));
-					req.send(null);
-				}
+				this.$store.commit('showCountry', {
+					cc: ev.target.id,
+					countryName: ev.target.getAttribute('title')
+				});
+				this.$store.dispatch('fetchCountry', ev.target.id);
 			}
+		},
+		outLand: function(ev) {
+			if ((ev.target.tagName === 'path' && ev.toElement === undefined && !this.mouseOverBox) // desktop
+			|| (ev.toElement !== undefined && ev.toElement.id !== "stereotype-box")) { // mobile
+				this.$store.commit('hideCountry');
+			}
+		},
+		hideStBox: function() {
+			this.touchStartRegistered = false;
+			this.$store.commit('hideCountry');
 		},
 		leaveStBox: function() {
 			this.mouseOverBox = false;
@@ -54,12 +98,6 @@ new Vue({
 		},
 		enterStBox: function() {
 			this.mouseOverBox = true;
-		},
-		outLand: function(ev) {
-			if ((ev.target.tagName === 'path' && ev.toElement === undefined && !this.mouseOverBox) // desktop
-			|| (ev.toElement !== undefined && ev.toElement.id !== "stereotype-box")) { // mobile
-				this.hideStBox();
-			}
 		},
 		touchStartStBox: function(ev) {
 			this.touchStartRegistered = true;

@@ -38,6 +38,7 @@ if (dev) { // on prod server nginx handles this
 	const serve = require('koa-static');
 	app.use(serve(__dirname + '/static'));
 	app.use(serve(__dirname + '/node_modules/vue/dist'));
+	app.use(serve(__dirname + '/node_modules/vuex/dist'));
 	app.use(serve(__dirname + '/node_modules/github-fork-ribbon-css'));
 }
 
