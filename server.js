@@ -26,6 +26,7 @@ app.use(router.get('/', async ctx => {
 app.use(router.get('/api/:countryCode.json', async (ctx, countryCode) => {
 	try {
 		ctx.body = JSON.stringify(await model.getStereotypes(countryCode));
+		ctx.set('Access-Control-Allow-Origin', '*');
 		ctx.status = 200;
 	} catch (err) {
 		ctx.body = 'Error: ' + err.message;
