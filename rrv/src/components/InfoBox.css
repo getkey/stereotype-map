@@ -1,0 +1,22 @@
+#info {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  margin-left: 1.75rem;
+}
+#info #info-button {
+  box-shadow: 0 0 2px #404050;
+  background-color: #e4e4e4;
+  font-size: 2rem;
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+}
+#info #explanation {
+  box-shadow: 0 0 2px #404050;
+  background-color: #e4e4e4;
+  padding: 1rem;
+}

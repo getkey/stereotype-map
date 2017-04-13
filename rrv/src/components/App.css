@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+  background-color: #404050;
+}
+html,
+body {
+  overflow: auto;
+}
+html,
+body,
+#app,
+svg {
+  height: 100%;
+}
+.github-fork-ribbon::before {
+  background-color: #333;
+}
+svg {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: block;
+  margin: auto;
+}
+#stereotype-box {
+  position: fixed;
+  bottom: 1.75rem;
+  left: 1.75rem;
+  background-color: #e4e4e4;
+  padding: 2rem;
+  box-shadow: 0 0 2px #404050;
+}
+#stereotype-box .status {
+  color: #303030;
+  font-size: 0.9rem;
+}
